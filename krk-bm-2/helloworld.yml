@@ -15,25 +15,25 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: helloworld-v2
+  name: helloworld-v1
   labels:
     app: helloworld
-    version: v2
+    version: v1
 spec:
   replicas: 1
   selector:
     matchLabels:
       app: helloworld
-      version: v2
+      version: v1
   template:
     metadata:
       labels:
         app: helloworld
-        version: v2
+        version: v1
     spec:
       containers:
       - name: helloworld
-        image: docker.io/istio/examples-helloworld-v2
+        image: docker.io/istio/examples-helloworld-v1
         resources:
           requests:
             cpu: "100m"
