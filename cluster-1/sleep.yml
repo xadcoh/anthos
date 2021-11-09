@@ -19,11 +19,13 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: sleep
+  namespace: sample
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: sleep
+  namespace: sample
   labels:
     app: sleep
     service: sleep
@@ -38,6 +40,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: sleep
+  namespace: sample
 spec:
   replicas: 1
   selector:
