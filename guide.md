@@ -6,7 +6,7 @@ Pre-requisites:
 
 - Google account with sufficient credit on it (trial period will do), $15/day should be sufficient
 - Google project with sufficient permissions
-- 3 bare metal machines with next specs (2 jf them will be cluster nodes, one for master and one for worker, third will be jump host (one we're going to use to provision everything inclusding cluster on bare-metal)):
+- 3 bare metal machines with next specs (2 of them will be cluster nodes, one for master and one for worker, third will be jump host (one we're going to use to provision everything inclusding cluster on bare-metal)):
   - 4 core CPU or better
   - 16Gb RAM or more
   - 110Gb Storage or more
