@@ -29,6 +29,8 @@ Pre-requisites:
     - [Observability in bare-metal istio setup](#observability-in-bare-metal-istio-setup)
   - [Config Management](#config-management)
 
+This is a modified picture from Istio docs that contains IP and subnets from this setup
+
 ![ASM](./anthos_multi_cluster.png "ASM")
 
 ## GKE Cluster Install
