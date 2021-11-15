@@ -29,7 +29,11 @@ Pre-requisites:
     - [Observability in bare-metal istio setup](#observability-in-bare-metal-istio-setup)
   - [Config Management](#config-management)
 
+![ASM](./anthos_multi_cluster.png "ASM")
+
 ## GKE Cluster Install
+
+We need to provision two fresh empty clusters. One will run on bare-metal machines and leverage `bmctl` cli second will be provisioned in GCP using `gcloud` cli. Bare-metal cluster provisioning requires quite powerfull machines to run the cluster as well as a machine to run the provisioner itself.
 
 ### Anthos on bare-metal setup
 
@@ -44,6 +48,8 @@ Pre-requisites:
 - Google project id will be: `asmtest-331513`
 
 > Reference: https://cloud.google.com/anthos/clusters/docs/bare-metal/latest/quickstart
+
+OS on the bare-mteal host must be prepared to install GKE, multiple OS flavors are supported. Basically we need to install container runtime - docker (GKE uses containerd, probably this is a requirement for backward compatibility with installation scripts) and disable firewall. Please note GKE uses cilium as a CNI so that Linux Kernel 4.9+ is requred. Depending of your OS choice you could use root or regular user with passwordless sudo.
 
 1. [Setup](https://cloud.google.com/anthos/clusters/docs/bare-metal/latest/installing/configure-os/ubuntu) your nodes (master and worker):
 
@@ -106,9 +112,9 @@ Pre-requisites:
 
 8. Modify the [manifest](https://cloud.google.com/anthos/clusters/docs/bare-metal/latest/quickstart#edit-config) accordingly
 
-    > There is an [example](./kra-bm-1.yaml) I used for my cluster
+    There is an [example](./kra-bm-1.yaml) I used for my cluster
 
-    > My cluster reside in a private network and doesn't have a Public IP, public IP is required by Istio to provide service discovery usin kube-apiserver and app traffic flow via eastwest-gateway (see the [Istio multi-cluster setup](https://istio.io/latest/docs/setup/install/multicluster/multi-primary_multi-network/)). There is an option to change [LB configuration](https://cloud.google.com/anthos/clusters/docs/bare-metal/latest/installing/load-balance) from bundled to manual but I don't have access to LB so I asked admin to forward few ports to my master node, it should be sufficient for demo purposes. More about it in ASM section.
+    My cluster reside in a private network and doesn't have a Public IP, public IP is required by Istio to provide service discovery usin kube-apiserver and app traffic flow via eastwest-gateway (see the [Istio multi-cluster setup](https://istio.io/latest/docs/setup/install/multicluster/multi-primary_multi-network/)). There is an option to change [LB configuration](https://cloud.google.com/anthos/clusters/docs/bare-metal/latest/installing/load-balance) from bundled to manual but I don't have access to LB so I asked admin to forward few ports to my master node, it should be sufficient for demo purposes. More about it in ASM section.
 
 9. [Create](https://cloud.google.com/anthos/clusters/docs/bare-metal/latest/quickstart#preflight-checks) the cluster
 
@@ -196,6 +202,8 @@ Pre-requisites:
 - ClusterName and MeshID overriden for simplicity
 - Vanilla istio [multi-cluster](https://istio.io/latest/docs/setup/install/multicluster/multi-primary_multi-network/) setup is underlied here
 - `FLEET_PROJECT_ID` will be the same as Google project ID - `asmtest-331513`, more about the fleets [here](https://cloud.google.com/anthos/multicluster-management/fleets)
+
+Anthos Service Mesh (ASM) is a Google modified Istio. Accordingly to documentation as of time of writing ASM doesn't support hybrid multi-cluster setups, you can setup multi-cluster connectivity in cloud or between on-prem, but not between cloud and on-prem. Vanilla Istio doesn't divide the way cluster is installed and it's setup-agnostic in some way, so I'm going to leverage that and apply steps from Istio's multi-cluster different networks guide. Please note Google ships their own flavor of `istioctl` and it will provision configs with ASM-based control and worker planes for service mesh, but it is still Istio under the hood.
 
 ### Anthos Service Mesh on bare-metal
 
@@ -904,6 +912,8 @@ Navigate to Anthos console, select Config Management, click `SETUP` (if you didn
 Configuration is staightforward, as bare minimum, you need to define git repo, auth if needed and `Policy directory` - a folder with k8s manifests you'd like to apply to your k8s cluster.
 
 For testing purposes I'm using these two folders from my personal GitHub repo (no auth is required):
+
+> google-credentials json file could be required for BoA, you could find one in kube-system namespace or create new one
 
 - First part of BoA (+helloworld): https://github.com/xadcoh/anthos/tree/main/cluster-1
 - Second part of BoA (+helloworld): https://github.com/xadcoh/anthos/tree/main/krk-bm-1
