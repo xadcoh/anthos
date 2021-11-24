@@ -28,6 +28,8 @@ Pre-requisites:
     - [Verify with Bank of Anthos](#verify-with-bank-of-anthos)
     - [Observability in bare-metal istio setup](#observability-in-bare-metal-istio-setup)
   - [Config Management](#config-management)
+  - [Cloud Run for Anthos](#cloud-run-for-anthos)
+  - [Discovered Limitations](#discovered-limitations)
 
 This is a modified picture from Istio docs that contains IP and subnets from this setup
 
@@ -919,3 +921,16 @@ For testing purposes I'm using these two folders from my personal GitHub repo (n
 
 - First part of BoA (+helloworld): https://github.com/xadcoh/anthos/tree/main/cluster-1
 - Second part of BoA (+helloworld): https://github.com/xadcoh/anthos/tree/main/krk-bm-1
+
+Config Management is quite limited, for example it will perform pre-flight chacks (`nomos`) but it won't track status of the deployed resources.
+
+## Cloud Run for Anthos
+
+Cloud run for Anthos works fine on GKE in GCP but I experienced troubles installing it on bare-metal setup.
+
+## Discovered Limitations
+
+- Anthos Service Mesh can be configured only in in-cluster control plane setup (Google hosted service mesh control plane configuration is lmited). This is a question about hybrid setup.
+- Google Console represents Service Mesh data from GKE on GCP only (no bare-metal data). Same as Istio in multi-cluster setup with control plane in each cluster.
+- Config Management is limited to sync git state to the cluster(s) without much flexibility
+- Cloud Run for Anthos didn't work on bare-metal in my case
