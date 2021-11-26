@@ -26,7 +26,7 @@ Pre-requisites:
       - [Verify Endpoints](#verify-endpoints)
       - [Verify Traffic flow](#verify-traffic-flow)
     - [Verify with Bank of Anthos](#verify-with-bank-of-anthos)
-    - [Observability in bare-metal istio setup](#observability-in-bare-metal-istio-setup)
+    - [Observability in bare-metal Istio setup](#observability-in-bare-metal-istio-setup)
   - [Config Management](#config-management)
   - [Cloud Run for Anthos](#cloud-run-for-anthos)
   - [Discovered Limitations](#discovered-limitations)
@@ -204,7 +204,7 @@ OS on the bare-mteal host must be prepared to install GKE, multiple OS flavors a
 
 - By default network will be set to `default` and it leads to wrong endpoint discovery
 - ClusterName and MeshID overriden for simplicity
-- Vanilla istio [multi-cluster](https://istio.io/latest/docs/setup/install/multicluster/multi-primary_multi-network/) setup is underlied here
+- Vanilla Istio [multi-cluster](https://istio.io/latest/docs/setup/install/multicluster/multi-primary_multi-network/) setup is underlied here
 - `FLEET_PROJECT_ID` will be the same as Google project ID - `asmtest-331513`, more about the fleets [here](https://cloud.google.com/anthos/multicluster-management/fleets)
 
 Anthos Service Mesh (ASM) is a Google modified Istio. Accordingly to documentation as of time of writing ASM doesn't support hybrid multi-cluster setups, you can setup multi-cluster connectivity in cloud or between on-prem, but not between cloud and on-prem. Vanilla Istio doesn't divide the way cluster is installed and it's setup-agnostic in some way, so I'm going to leverage that and apply steps from Istio's multi-cluster different networks guide. Please note Google ships their own flavor of `istioctl` and it will provision configs with ASM-based control and worker planes for service mesh, but it is still Istio under the hood.
@@ -462,7 +462,7 @@ Eastwest gateway will automatically acquire External IP from MetalLB, but it wil
 
 Now we need to create secrets so that each cluster can gather all the required information from others
 
-next command performs steps similar to [istio endpoint discovery](https://istio.io/latest/docs/setup/install/multicluster/multi-primary_multi-network/#enable-endpoint-discovery)
+next command performs steps similar to [Istio endpoint discovery](https://istio.io/latest/docs/setup/install/multicluster/multi-primary_multi-network/#enable-endpoint-discovery)
 
 > All commands were performed from jump host if other wasn't specified
 
@@ -536,9 +536,9 @@ My ControlPlaneVIP for bare-metal cluster is private IP so remote cluster will t
 
 Bare-metal cluster:
 
-1. Get istio revision
+1. Get Istio revision
 
-    > In this installation istio revision label was `istio.io/rev=asm-1112-17`
+    > In this installation Istio revision label was `istio.io/rev=asm-1112-17`
 
     ```bash
     kubectl --context kra-bm-1-admin@kra-bm-1 -n istio-system get pods -l app=istiod --show-labels
@@ -663,9 +663,9 @@ Bare-metal cluster:
 
 GCP cluster:
 
-1. Get istio revision
+1. Get Istio revision
 
-    > In this installation istio revision label was `istio.io/rev=asm-1112-17`
+    > In this installation Istio revision label was `istio.io/rev=asm-1112-17`
 
     ```bash
     kubectl --context gke_asmtest-331513_europe-central2-a_cluster-1 -n istio-system get pods -l app=istiod --show-labels
@@ -869,11 +869,13 @@ There is an example app from Google called `Bank of Anthos`, it contains fronten
 - First part of BoA (+helloworld): https://github.com/xadcoh/anthos/tree/main/cluster-1
 - Second part of BoA (+helloworld): https://github.com/xadcoh/anthos/tree/main/krk-bm-1
 
-### Observability in bare-metal istio setup
+### Observability in bare-metal Istio setup
 
 > All commands were performed from jump host if other wasn't specified
 
 There is a GUI for Istio that help you visualize the telemetry: [Kiali](https://kiali.io/)
+
+![Kiali](./kiali.png "Kiali")
 
 I'm going to use integrations manifests from official [Istio docs](https://istio.io/latest/docs/ops/integrations/)
 
@@ -922,11 +924,11 @@ For testing purposes I'm using these two folders from my personal GitHub repo (n
 - First part of BoA (+helloworld): https://github.com/xadcoh/anthos/tree/main/cluster-1
 - Second part of BoA (+helloworld): https://github.com/xadcoh/anthos/tree/main/krk-bm-1
 
-Config Management is quite limited, for example it will perform pre-flight chacks (`nomos`) but it won't track status of the deployed resources.
+Config Management is quite limited, for example it will perform pre-flight checks (`nomos`) but it won't track status of the deployed resources.
 
 ## Cloud Run for Anthos
 
-Cloud run for Anthos works fine on GKE in GCP but I experienced troubles installing it on bare-metal setup.
+Cloud run for Anthos works fine on GKE in GCP but I experienced troubles installing it on bare-metal setup. There is a [guide](https://cloud.google.com/anthos/run/docs/install/outside-gcp) for Clusters Outside Google Cloud and docs claim that all I need is to enable APIs, enable Cloud Run feature and then I'll able to install Cloud Run via CRD, but my bare-metal cluster (registered in fleet, with enabled APIs and Cloud Run feature) lacks this CRD and I'm stuck gathering it.
 
 ## Discovered Limitations
 
