@@ -70,3 +70,18 @@ Anthos has limitations. Probably these will be solved in the future releases.
 - Anthos Configuration Management has limited features. Basically it syncs git to cluster and that's it, no healthchecks or so whatever
 - There is a prometheus for metrics and log shipper to stackdriver in bare-metal setup, but comparing to GKE in GCP experience will differ. Console for GKE in GCP will have more data
 - Anthos Cloud Run could be installed on GKE in GCP on in VMWare only (no bare-metal)
+
+## Alternative options for Anthos
+
+|Topic|Anthos|OSS Alternatives|
+|-----|------|------------|
+|Cluster Management|Google Anthos Console|Rancher, OKD, kubesphere, cloudfoundry, Cluster API|
+|Cluster Installation|bmctl|rke/rke2, kubespray, kubekey|
+|Config Management|Google Anthos Console|Argo, Flux, Rancher Fleet|
+|Service Mesh Installation|asmcli|istioctl, helm, istio operator, Meshery|
+|Service Mesh|Anthos Service Mesh|istio, linkerd, cilium mesh|
+|Service Mesh UI|Anthos Service Mesh Console|Kiali, Jaeger|
+|Service Mesh Config|Anthos Service Mesh Console|Admiral, Meshery|
+|Serverless|Cloud Run|KNative|
+|Logging|Stackdriver|Loki, Elastic/Opensearch|
+|Metrics|Stackdriver|Prometheus|
